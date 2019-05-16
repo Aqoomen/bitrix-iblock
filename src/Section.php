@@ -1,21 +1,17 @@
 <?php
 namespace iPremium\Bitrix\iBlock;
 
+use iPremium\Bitrix\iBlock\QueryBilder;
+
 class Section
 {
+    use QueryBilder;
     /*
     use this param true if you want write in lovercase params
     and script auto transform it to BITRIX_CAPS_STYLE
      */
     protected $lovercase = false;
 
-    protected $properties;
-
-    protected $select;
-
-    protected $filter;
-
-    protected $iblockId;
 
     protected $order = [
         "SORT" => "ASC"
@@ -31,70 +27,12 @@ class Section
         "SECTION_PAGE_URL"
     ];
 
-    public function __construct()
+    public function __construct($id, $return)
     {
         $this->iblockId = $id;
         //to do use global settings in iBLock::instanse()->elementLoverCase();
     }
 
-    public function lovercase($param)
-    {
-        $this->lovercase = $param;
-    }
-
-    public function select(...$params)
-    {
-        if ($this->lovercase)
-        {
-            foreach ($params as &$param) {
-                $param = strtoupper($param);
-            }
-
-            $this->select = $params;
-        }
-        else
-        {
-            $this->select = $params;
-        }
-
-        return $this;
-    }
-
-    public static function iblock($id)
-    {
-        return new static($id);
-    }
-
-    public function filter($params)
-    {
-        if (!in_array($params, ['iblock_id', 'IBLOCK_ID']))
-        {
-            if ($this->iblockId != null)
-            {
-                $params = array_merge($params, ['IBLOCK_ID' => $this->iblockId]);
-            }
-        }
-
-        if ($this->lovercase)
-        {
-            foreach ($params as &$param) {
-                $param = strtoupper($param);
-            }
-
-            $this->filter = $params;
-        }
-        else
-        {
-            $this->filter = $params;
-        }
-
-        return $this;
-    }
-
-    public function order($params)
-    {
-        $this->order = $params;
-    }
 
     public function get($method = null)
     {
@@ -131,9 +69,6 @@ class Section
         }
     }
 
-    public function first($method = null)
-    {
-        return $this->get(1, $method);
-    }
+
 
 }
