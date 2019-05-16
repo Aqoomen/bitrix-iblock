@@ -104,7 +104,9 @@ class Element
 
         if ( \CModule::IncludeModule("iblock"))
         {
-            $select = ($this->select == null) ? $this->select : $this->defalutSelect;
+            $select = (is_null($this->select)) ? $this->defalutSelect : $this->select;
+
+            //print_r($select);
 
         	$res = \CIBlockElement::GetList($this->order, $this->filter, false, [ "nPageSize" => $count ], $select);
 
@@ -130,6 +132,8 @@ class Element
                     if ($count == 1) {
                         $elements = new Item($element);
                     }
+
+                    $elements[] = new Item($element);
                 }
 
         	}

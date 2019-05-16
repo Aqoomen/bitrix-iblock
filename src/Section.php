@@ -103,15 +103,21 @@ class Section
         if ( \CModule::IncludeModule("iblock"))
         {
 
-            $select = ($this->select == null) ? $this->select : $this->defalutSelect;
+            $select = (is_null($this->select)) ? $this->defalutSelect : $this->select;
 
-            $rsSections = \CIBlockSection::GetList($this->order, $this->filter, false, $select);
+            //fn_print_r($this->filter);
 
-            while($arSection = $rsSections->GetNext())
+            $dbSectionList = \CIBlockSection::GetList($this->order, $this->filter, false, $select);
+
+            while($arSection = $dbSectionList->GetNext())
     		{
                 if ( is_callable($method) )
                 {
                     call_user_func_array($method, [ &$arSection ]);
+                }
+
+                if ($count == 1) {
+                    return $sections = $arSection;
                 }
 
                 $sections[] = $arSection;
@@ -123,6 +129,11 @@ class Section
         {
             return false;
         }
+    }
+
+    public function first($method = null)
+    {
+        return $this->get(1, $method);
     }
 
 }
